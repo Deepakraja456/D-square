@@ -1,6 +1,6 @@
 // ── CONFIG — PASTE YOUR SUPABASE KEYS HERE ───────────────────────────────────
-const SUPABASE_URL = 'PASTE_YOUR_PROJECT_URL_HERE';
-const SUPABASE_KEY = 'PASTE_YOUR_ANON_KEY_HERE';
+const SUPABASE_URL = 'sb_publishable_O5LNLEFOO4DiudWSPEdsvQ_e9jBwQGH';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNkcHhrcmRleHBhamlwemF3cmR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0OTcwMDEsImV4cCI6MjA4NzA3MzAwMX0.a33SKAum02CW3wZxHmgDrECH1a4vR2ouTl-1oiYRaF8';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
