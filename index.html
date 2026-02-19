@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"/>
+<title>MyDashboard</title>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon.png"/>
+<meta name="theme-color" content="#34d058"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg1:#e8f5e9;--bg2:#c8e6c9;
+  --glass:rgba(255,255,255,0.38);--glass2:rgba(255,255,255,0.22);
+  --gb:rgba(255,255,255,0.65);--gb2:rgba(255,255,255,0.3);
+  --accent:#34d058;--accent2:#00c853;--ar:52,208,88;
+  --text:#0a1f0a;--t2:#2d4a2d;--t3:#6b8f6b;
+  --sh:rgba(0,180,60,0.13);--sh2:rgba(0,0,0,0.07);
+  --nav:rgba(232,245,233,0.82);--danger:#ff453a;--warn:#ff9f0a;
+  --spec:rgba(255,255,255,0.9);
+}
+.dark{
+  --bg1:#0a1a0f;--bg2:#0d2010;
+  --glass:rgba(20,45,25,0.55);--glass2:rgba(15,35,20,0.4);
+  --gb:rgba(80,160,80,0.25);--gb2:rgba(60,120,60,0.18);
+  --accent:#30d158;--accent2:#25a244;--ar:48,209,88;
+  --text:#e8f5e9;--t2:#a5d6a7;--t3:#4a7a4a;
+  --sh:rgba(48,209,88,0.18);--sh2:rgba(0,0,0,0.25);
+  --nav:rgba(10,26,15,0.88);--spec:rgba(80,200,100,0.25);
+}
+html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif}
+body{background:var(--bg1);color:var(--text);transition:background .5s,color .4s;min-height:100dvh}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(var(--ar),0.22) 0%,transparent 60%),
+  radial-gradient(ellipse 60% 80% at 80% 90%,rgba(var(--ar),0.15) 0%,transparent 60%);}
+#root{position:relative;z-index:1;max-width:430px;margin:0 auto;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+
+/* Glass */
+.lg{background:var(--glass);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border-radius:22px;border:1px solid var(--gb);box-shadow:0 1px 0 0 var(--spec) inset,0 8px 32px var(--sh2),0 2px 8px var(--sh);position:relative;overflow:hidden}
+.lg::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,0.18) 0%,transparent 50%,rgba(255,255,255,0.04) 100%)}
+.lg-sm{background:var(--glass2);backdrop-filter:blur(30px) saturate(160%);-webkit-backdrop-filter:blur(30px) saturate(160%);border-radius:16px;border:1px solid var(--gb2);box-shadow:0 4px 16px var(--sh2),0 1px 0 var(--spec) inset;position:relative;overflow:hidden}
+
+/* Buttons */
+.btn{border:none;border-radius:14px;padding:13px 22px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .15s,opacity .2s;font-family:inherit;width:100%;letter-spacing:-.2px}
+.btn:active{transform:scale(0.95)}
+.btn-p{background:linear-gradient(145deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 4px 18px rgba(var(--ar),0.45),0 1px 0 rgba(255,255,255,0.3) inset}
+.btn-s{background:var(--glass);color:var(--text);border:1px solid var(--gb);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 2px 8px var(--sh2),0 1px 0 var(--spec) inset}
+.btn-d{background:linear-gradient(145deg,#ff453a,#d63028);color:#fff;box-shadow:0 4px 16px rgba(255,69,58,0.35)}
+.btn-g{background:transparent;color:var(--accent);border:none;box-shadow:none}
+
+/* Inputs */
+input,textarea{font-family:inherit;background:var(--glass2);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--gb2);border-radius:13px;padding:13px 15px;color:var(--text);font-size:15px;outline:none;width:100%;box-sizing:border-box;box-shadow:0 2px 8px var(--sh2) inset,0 1px 0 var(--spec);transition:border-color .2s,box-shadow .2s}
+input:focus,textarea:focus{border-color:rgba(var(--ar),0.6);box-shadow:0 0 0 3px rgba(var(--ar),0.12),0 2px 8px var(--sh2) inset}
+textarea{resize:none;line-height:1.75}
+
+/* Pages */
+.page{display:none;flex:1;overflow-y:auto;padding:0 15px 90px;-webkit-overflow-scrolling:touch}
+.page.active{display:block}
+.ph{padding:18px 0 12px;display:flex;align-items:center;justify-content:space-between}
+.ph h2{font-size:26px;font-weight:700;letter-spacing:-.5px}
+
+/* Nav */
+#nav{position:relative;z-index:100;background:var(--nav);backdrop-filter:blur(40px) saturate(200%);-webkit-backdrop-filter:blur(40px) saturate(200%);border-top:1px solid var(--gb);padding:8px 4px max(10px,env(safe-area-inset-bottom));display:flex;justify-content:space-around;box-shadow:0 -1px 0 var(--gb),0 -8px 24px rgba(0,0,0,0.06)}
+.nb{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 14px;border-radius:14px;cursor:pointer;color:var(--t3);transition:all .25s cubic-bezier(.34,1.56,.64,1);font-family:inherit}
+.nb.on{color:var(--accent);background:rgba(var(--ar),0.12);box-shadow:0 1px 0 rgba(var(--ar),0.2) inset}
+.nb span{font-size:9px;font-weight:500}
+.nb.on span{font-weight:700}
+
+/* Auth screen */
+#auth{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding
